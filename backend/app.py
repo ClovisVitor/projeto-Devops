@@ -2,13 +2,14 @@ import psycopg2
 import os 
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 # Carrega Váriaveis do ambiente.
 load_dotenv()
 
 # Configuração Flask
 app = Flask(__name__)
-
+CORS(app)
 
 try:
     # Criar conexão

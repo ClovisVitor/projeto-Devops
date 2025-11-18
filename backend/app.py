@@ -144,6 +144,37 @@ def update_task(task_id):
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+# ROTA DELETE → remover uma task
+@app.delete("/tasks/<int:task_id>")
+def delete_task(task_id):
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+
+        # Deleta e retorna o ID deletado (se existir)
+        cur.execute("""
+            DELETE FROM tasks
+            WHERE id = %s
+            RETURNING id;
+        """, (task_id,))
+
+        deleted = cur.fetchone()
+        conn.commit()
+
+        cur.close()
+        conn.close()
+
+        if not deleted:
+            return jsonify({"error": "Task não encontrada"}), 404
+
+        return jsonify({
+            "message": "Task deletada com sucesso!",
+            "task_id": deleted[0]
+        }), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # -------------------------------
 # Servidor Flask

@@ -69,6 +69,38 @@ def add_task():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+    
+    # ROTA GET → listar todas as tasks
+@app.get("/tasks")
+def get_tasks():
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+
+        cur.execute("""
+            SELECT id, title, done
+            FROM tasks
+            ORDER BY id;
+        """)
+
+        rows = cur.fetchall()
+
+        tasks = []
+        for row in rows:
+            tasks.append({
+                "id": row[0],
+                "title": row[1],
+                "done": row[2]
+            })
+
+        cur.close()
+        conn.close()
+
+        return jsonify(tasks), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # -------------------------------
 # Servidor Flask

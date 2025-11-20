@@ -176,9 +176,29 @@ def delete_task(task_id):
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+    
+def init_db():
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS tasks (
+            id SERIAL PRIMARY KEY,
+            title TEXT NOT NULL,
+            done BOOLEAN NOT NULL DEFAULT FALSE
+        );
+    """)
+
+    conn.commit()
+    cur.close()
+    conn.close()
+    print("Tabela 'tasks' verificada/criada com sucesso!")
+
 
 # -------------------------------
 # Servidor Flask
 # -------------------------------
 if __name__ == "__main__":
-    app.run(debug=True)
+    init_db()   # garante que a tabela existe
+    app.run(host="0.0.0.0", port=5000, debug=True)

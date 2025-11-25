@@ -11,8 +11,9 @@ A aplicação se trada de um To Do List onde é possível gerenciar tarefas do d
 ---
 
 ## Índice 📚
-- [Requisitos](#requisitos-)
-- [Tecnologias Utilizadas](#tecnologias-utilizadas-)
+
+- [Requisitos](#requisitos-️)
+- [Tecnologias Utilizadas](#tecnologias-utilizadas-️)
 - [Estrutura do Projeto](#estrutura-do-projeto-)
 - [Como Executar a Aplicação](#como-executar-a-aplicação-)
 - [Testando a API com o Postman](#testando-a-api-com-postman-)
@@ -236,16 +237,19 @@ A aplicação se trada de um To Do List onde é possível gerenciar tarefas do d
    ```bash
    docker ps
    ```
-    **Você deve ver algo como:**
+   Você deve ver algo como:
+
     - zabbix-web
     -  zabbix-server
     - postgres
     - grafana
 ### 7. Liberar portas na EC2
     
-    Na AWS → EC2 → Security Groups → sua instância
+Na AWS → EC2 → Security Groups → sua instância
 
-    Adicione **Regras de Saída**:
+
+    Adicione Regras de Saída:
+
     | Porta | Serviço    | Protocolo | Origem    |
     | ----- | ---------- | --------- | --------- |
     | 8080  | Zabbix     | TCP       | 0.0.0.0/0 |
@@ -254,76 +258,79 @@ A aplicação se trada de um To Do List onde é possível gerenciar tarefas do d
     
 ### 8. Criar o Host de Monitoramento
     
-    Acesse o Zabbix: http://IP:8080
+Acesse o Zabbix: http://IP:8080
     
-    No Zabbix:
+No Zabbix:
 
-    1. Acesse o menu lateral:
+1. Acesse o menu lateral:
 
-        **Data Collection → Hosts**
+    Data Collection → Hosts
 
-    2. Clique em **Create Host**
+2. Clique em Create Host
 
-    3. Preencha:
-        - **Hostname:** todo-aplicacao
-        - **Interfaces:** Agent (IP da EC2)
-    4. Em templates, adicione:
+3. Preencha:
+    - Hostname: todo-aplicacao
+    - Interfaces: Agent (IP da EC2)
+4. Em templates, adicione:
         
-        - **Linux by Zabbix agent**
-        - **ICMP Ping**
+    - Linux by Zabbix agent
+    - ICMP Ping
 
-    5. Salve e instale isso no EC2 de monitoramento:
-        ```bash
+5. Salve e instale isso no EC2 de monitoramento:
+    ```bash
         sudo apt update
         sudo apt install zabbix-agent -y
         sudo systemctl enable --now zabbix-agent
-        ```
-        Edite o arquivo de configuração:
-        ```bash
-        sudo nano /etc/zabbix/zabbix_agentd.conf
-        ```
-        Procure a linha: Server e edite para:
-        ```bash
-         Server=IP DO ZABBIX SERVER
-        ```
-        Salve com Ctrl + O, Enter, Ctrl + X.
+    ```
+    Edite o arquivo de configuração:
         
-        Reinicie:
-        ```bash
-        sudo systemctl restart zabbix-agent
-        ```
+    ```bash
+    sudo nano /etc/zabbix/zabbix_agentd.conf
+    ```
+    Procure a linha: Server e edite para:
+    ```bash
+    Server=IP DO ZABBIX SERVER
+    ```
+    Salve com Ctrl + O, Enter, Ctrl + X.
+      
+    Reinicie:
+    ```bash
+    sudo systemctl restart zabbix-agent
+    ```
 ### 9. Configuração do Grafana: 
 
-    Acesse o Grafana: http://IP:3000
+Acesse o Grafana: http://IP:3000
 
-    1. Siga o caminho:
+1. Siga o caminho:
          
-         Administration → Plugin and data  → Plugins  → Busque por Zabbix  → Install
-    2. Após instalação do Zabbix ir para configuração seguindo o caminho: 
+    Administration → Plugin and data  → Plugins  → Busque por Zabbix  → Install
+         
+2. Após instalação do Zabbix ir para configuração seguindo o caminho: 
         
-        Connections → Data sources  → Add new data source  → Zabbix 
-    3. Preencha com os dados do Docker: 
+    Connections → Data sources  → Add new data source  → Zabbix 
+
+3. Preencha com os dados do Docker: 
        
-        - URL: 
-        - Access: Server (default)
-        - Username: Admin
-        - Password: zabbix (ou a sua senha)
-    4. Importar o Dashboard
-        1. Vá em Dashboard e clique em **New > Import**
-        2. No campo onde diz "Import via grafana.com", digite apenas o número: 5363.
-            - Este é o ID do dashboard "Zabbix - Linux Server".
-        3. Vai aparecer uma tela de configuração. A única coisa que você precisa mudar é lá embaixo:
-            - Onde diz **Zabbix** (ou Data Source), clique na lista e selecione o **Zabbix** que acabamos de configurar.
-        4. Clique em **Import**.
-    5. Como usar o Dashboard
+    - URL: 
+    - Access: Server (default)
+    - Username: Admin
+    - Password: zabbix (ou a sua senha)
+4. Importar o Dashboard
+    1. Vá em Dashboard e clique em New > Import
+    2. No campo onde diz "Import via grafana.com", digite o número: 5363.
+        - Este é o ID do dashboard "Zabbix - Linux Server".
+    3. Vai aparecer uma tela de configuração. Você precisa mudar é lá embaixo:
+        - Onde diz Zabbix (ou Data Source), clique na lista e selecione o Zabbix que acabamos de configurar.
+    4. Clique em Import.
+5. Como usar o Dashboard
 
-        Assim que carregar, pode ser que ele mostre "No data" ou dados de outro servidor. Para ver a sua EC2:
+    Assim que carregar, pode ser que ele mostre "No data" ou dados de outro servidor. Para ver a sua EC2:
 
-        1. Olhe no topo do Dashboard, existem filtros (variáveis).
+    1. Olhe no topo do Dashboard, existem filtros (variáveis).
 
-        2. Host Group: Geralmente pode deixar em "All" ou selecionar o grupo onde colocou sua EC2.
+    2. Host Group: Geralmente pode deixar em "All" ou selecionar o grupo onde colocou sua EC2.
 
-        3. Clique e selecione o seu Host (todo-aplicacao).
+    3. Clique e selecione o seu Host (todo-aplicacao).
 ---
 ## Links da Aplicação 🌐
 
